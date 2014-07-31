@@ -21,13 +21,16 @@ body {
 	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUnImHQZA1vXK3sdia02qy_KawzLcAyh4">
     </script>
 <script type="text/javascript">
+
+  var ajax = {}
+
       function initialize() {
       
       var image = new google.maps.MarkerImage(
             "images/carmed.png", //url
             new google.maps.Size(25, 25), //size
             new google.maps.Point(0,0), //origin
-            new google.maps.Point(53.048897, -3.004085) //anchor 
+            new google.maps.Point(0,0) //anchor 
     );
       
          var mapOptions = {
@@ -38,8 +41,8 @@ body {
   var map = new google.maps.Map(document.getElementById('map-canvas'),
       mapOptions);
 
-  var ajax = {}
-ajax.url = "http://185.40.9.188:9110/DVLA/rest/getAllReportsNoPhotos";
+
+ajax.url = "http://10.81.16.227:9080/DVLA/rest/getAllReportsNoPhotos";
 ajax.params = "";
 ajax.get = function() {
 var xmlHTTP;
@@ -52,26 +55,39 @@ xmlHTTP.open("GET", ajax.url + ajax.params, true);
 xmlHTTP.send();
 xmlHTTP.onreadystatechange = function () {
 if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
-alert(xmlHTTP.responseText);
+//alert(xmlHTTP.responseText);
 ajax.result = eval( "(" + xmlHTTP.responseText + ")");
-ajax.processResult(ajax.result);
+ajax.processResult();
 }
 if (xmlHTTP.readyState == 4 && xmlHTTP.status != 200) { alert(xmlHTTP.status);}
 }
 }
 
 ajax.processResult = function() {
-alert(ajax.result[0].VRM);
+var reports = ajax.result.reports;
+for (i=0; i<reports.length; i++){
+  try{  
+  var lat = reports[i].GpsLocation.coordinates[1];
+  var lon =reports[i].GpsLocation.coordinates[0];
+  addMarker(lat, lon);}
+  catch (e){}
+}
+    google.maps.event.addDomListener(window, 'load', initialize);
+   //alert(reports.length);
 }
 ajax.get();
 
-
+function addMarker (lat, lon) {
+ var myLatLng = new google.maps.LatLng(lat, lon);
   var marker = new google.maps.Marker({
-    position: map.getCenter(),
+    position: myLatLng,
     icon: image,
     draggable: false,
     map: map
   });
+  
+  
+  }
 
 }
 
