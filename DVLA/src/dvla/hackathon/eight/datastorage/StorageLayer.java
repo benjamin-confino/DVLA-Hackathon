@@ -32,8 +32,8 @@ public class StorageLayer {
 	private static final String REPORTS_DATABASE = "Notifications";
 	private static final String VEHICLE_DATABASE = "vehicle";
 	private static final String PROVIDED_DATABASE_NAME = "data";
-	private static final String PROVIDED_DATABASE = "localhost";
-	//private static final String PROVIDED_DATABASE = "185.40.9.188";
+	//private static final String PROVIDED_DATABASE = "localhost";
+	private static final String PROVIDED_DATABASE = "185.40.9.188";
 
 	public StorageLayer()
 	{

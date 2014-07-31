@@ -1,103 +1,127 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-<style type="text/css">
-html {
-	height: 100%
-}
-
-body {
-	height: 100%;
-	margin: 0;
-	padding: 0
-}
-
-#map-canvas {
-	height: 100%
-}
-</style>
-<script type="text/javascript"
-	src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUnImHQZA1vXK3sdia02qy_KawzLcAyh4">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+        html {
+            height: 100%
+        }
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0
+        }
+        #map-canvas {
+            height: 100%
+        }
+    </style>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUnImHQZA1vXK3sdia02qy_KawzLcAyh4">
     </script>
-<script type="text/javascript">
+    <script type="text/javascript">
+        var ajax = {}
+        var a;
 
-  var ajax = {}
+        function initialize() {
 
-      function initialize() {
-      
-      var image = new google.maps.MarkerImage(
-            "images/carmed.png", //url
-            new google.maps.Size(25, 25), //size
-            new google.maps.Point(0,0), //origin
-            new google.maps.Point(0,0) //anchor 
-    );
-      
-         var mapOptions = {
-    zoom: 6,
-    center: new google.maps.LatLng(53.048897, -3.004085)
-  };
+            var image = new google.maps.MarkerImage(
+                "images/carmed.png", //url
+                new google.maps.Size(25, 25), //size
+                new google.maps.Point(0, 0), //origin
+                new google.maps.Point(0, 0) //anchor 
+            );
 
-  var map = new google.maps.Map(document.getElementById('map-canvas'),
-      mapOptions);
+            var mapOptions = {
+                zoom: 6,
+                center: new google.maps.LatLng(53.048897, -3.004085)
+            };
+
+            var map = new google.maps.Map(document.getElementById('map-canvas'),
+                mapOptions);
 
 
-ajax.url = "http://10.81.16.227:9080/DVLA/rest/getAllReportsNoPhotos";
-ajax.params = "";
-ajax.get = function() {
-var xmlHTTP;
-if (window.XMLHttpRequest) {
-xmlHTTP = new window.XMLHttpRequest;
-} else {
-alert("This service will not work with your browser");
-}
-xmlHTTP.open("GET", ajax.url + ajax.params, true);
-xmlHTTP.send();
-xmlHTTP.onreadystatechange = function () {
-if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
-//alert(xmlHTTP.responseText);
-ajax.result = eval( "(" + xmlHTTP.responseText + ")");
-ajax.processResult();
-}
-if (xmlHTTP.readyState == 4 && xmlHTTP.status != 200) { alert(xmlHTTP.status);}
-}
-}
+            ajax.url = "rest/getAllReportsNoPhotos";
+            ajax.params = "";
+            ajax.get = function() {
+                var xmlHTTP;
+                if (window.XMLHttpRequest) {
+                    xmlHTTP = new window.XMLHttpRequest;
+                } else {
+                    alert("This service will not work with your browser");
+                }
+                xmlHTTP.open("GET", ajax.url + ajax.params, true);
+                xmlHTTP.send();
+                xmlHTTP.onreadystatechange = function() {
+                    if (xmlHTTP.readyState == 4 && xmlHTTP.status == 200) {
+                        //alert(xmlHTTP.responseText);
+                        ajax.result = eval("(" + xmlHTTP.responseText + ")");
+                        ajax.processResult();
+                    }
+                    if (xmlHTTP.readyState == 4 && xmlHTTP.status != 200) {
+                        alert(xmlHTTP.status);
+                    }
+                }
+            }
 
-ajax.processResult = function() {
-var reports = ajax.result.reports;
-for (i=0; i<reports.length; i++){
-  try{  
-  var lat = reports[i].GpsLocation.coordinates[1];
-  var lon =reports[i].GpsLocation.coordinates[0];
-  addMarker(lat, lon);}
-  catch (e){}
-}
-    google.maps.event.addDomListener(window, 'load', initialize);
-   //alert(reports.length);
-}
-ajax.get();
+            ajax.processResult = function() {
+                var reports = ajax.result.reports;
+                for (i = 0; i < reports.length; i++) {
+                    try {
+                        var title = reports[i].DateTime.toString() + " $%$ " + reports[i].VRM;
+                        var lat = reports[i].GpsLocation.coordinates[1];
+                        var lon = reports[i].GpsLocation.coordinates[0];
+                        addMarker(lat, lon, title);
+                    } catch (e) {}
+                }
+                google.maps.event.addDomListener(window, 'load', initialize);
+                //alert(reports.length);
+            }
+            ajax.get();
 
-function addMarker (lat, lon) {
- var myLatLng = new google.maps.LatLng(lat, lon);
-  var marker = new google.maps.Marker({
-    position: myLatLng,
-    icon: image,
-    draggable: false,
-    map: map
-  });
-  
-  
-  }
+            function addMarker(lat, lon, title) {
+                var myLatLng = new google.maps.LatLng(lat, lon);
+                var marker = new google.maps.Marker({
+                    position: myLatLng,
+                    icon: image,
+                    draggable: false,
+                    map: map,
+                    title: title
+                });
+                
+                
+             google.maps.event.addListener(marker, 'click', function() {
+                                   
+                                    var reports = ajax.result.reports;
+                                    for (i = 0; i < reports.length; i++) {
+                                        try {
+                                            var VRM = reports[i].DateTime.toString() + " $%$ " + reports[i].VRM
+                                            
+                                            if (a == null){a=marker;}
 
-}
+                                            if (VRM == this.title) {
+                                            
+                                                var s = this.title;
+                                                var title = s.split(" $%$ ")[1];
+                                            
+												alert(title);
+                                            }
+                                        } catch (e) {}
+                                    }   
+					});
 
-      
-      
-      
-      google.maps.event.addDomListener(window, 'load', initialize);
+            }
+
+        }
+
+
+
+
+        google.maps.event.addDomListener(window, 'load', initialize);
     </script>
 </head>
+
 <body>
-	<div id="map-canvas" />
+    <div id="map-canvas" />
 </body>
+
 </html>
