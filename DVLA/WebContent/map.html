@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map-canvas { height: 100% }
+    </style>
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBUnImHQZA1vXK3sdia02qy_KawzLcAyh4">
+    </script>
+    <script type="text/javascript">
+      function initialize() {
+      
+      var image = new google.maps.MarkerImage(
+            "images/carmed.png", //url
+            new google.maps.Size(25, 25), //size
+            new google.maps.Point(0,0), //origin
+            new google.maps.Point(53.048897, -3.004085) //anchor 
+    );
+      
+         var mapOptions = {
+    zoom: 6,
+    center: new google.maps.LatLng(53.048897, -3.004085)
+  };
+
+  var map = new google.maps.Map(document.getElementById('map-canvas'),
+      mapOptions);
+
+  var marker = new google.maps.Marker({
+    position: map.getCenter(),
+    icon: image,
+    draggable: false,
+    map: map
+  });
+
+}
+
+      
+      
+      
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+  </head>
+  <body>
+    <div id="map-canvas"/>
+  </body>
+</html>
