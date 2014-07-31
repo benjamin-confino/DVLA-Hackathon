@@ -23,6 +23,7 @@ import dvla.hackathon.eight.datastorage.StorageSingleton;
 public class GetAllReportsNoPhoto {
 
 	StorageLayer DB = StorageSingleton.sl;
+	QueryColourByReg query = new QueryColourByReg();
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -34,6 +35,14 @@ public class GetAllReportsNoPhoto {
 	
 			List<Report> resultsList = DB.getAllReports(false);
 			response.reports = resultsList;
+			
+			for( Report r : response.reports){
+				
+				TaxStatus ts = new TaxStatus();
+				ts.VRM = r.VRM;
+				
+				r.car = query.querySingle(ts);
+			}
 		
 	
 		return response;

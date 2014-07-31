@@ -92,21 +92,37 @@
              google.maps.event.addListener(marker, 'click', function() {
                                    
                                     var reports = ajax.result.reports;
+                                    found = false;
                                     for (i = 0; i < reports.length; i++) {
                                         try {
                                             var VRM = reports[i].DateTime.toString() + " $%$ " + reports[i].VRM
                                             
                                             if (a == null){a=marker;}
 
+											
                                             if (VRM == this.title) {
-                                            
+                                            	found = true;
                                                 var s = this.title;
                                                 var title = s.split(" $%$ ")[1];
+                                                
+                                                if (reports[i].car.notFound != null && reports[i].car.notFound == true){
+                                                	alert("This vechicle is not in VSS")
+                                                }
+                                                else{
+                                                var colour = reports[i].car.colour;
+                                                var make = reports[i].car.make;
+                                                var model = reports[i].car.model;
                                             
-												alert(title);
+												alert("VRM: " + title + "\nMake: " + make + "\nModel: " + model + "\nColour: " + colour);}
                                             }
+                                            
+                                            
+                                            
+                                            
                                         } catch (e) {}
-                                    }   
+                                    }   if (found == false){
+                                               alert("something odd happened; we can't find this car in our database.")
+                                            }
 					});
 
             }

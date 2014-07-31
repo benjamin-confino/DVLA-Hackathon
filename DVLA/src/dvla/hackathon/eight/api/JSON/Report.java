@@ -15,5 +15,6 @@ public class Report {
 	public List<Report> reports;
 	public List<String> VRMs;
 	public Boolean notFound;
+	public ColourByReg car;
 
 }

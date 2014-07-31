@@ -29,7 +29,7 @@ public class StorageLayer {
 	private MongoClient mongoClient;
 	private DB db;
 
-	private static final String REPORTS_DATABASE = "Notifications";
+	private static final String REPORTS_DATABASE = "NewNotifications";
 	private static final String VEHICLE_DATABASE = "vehicle";
 	private static final String PROVIDED_DATABASE_NAME = "data";
 	//private static final String PROVIDED_DATABASE = "localhost";
